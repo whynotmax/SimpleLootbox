@@ -2,6 +2,7 @@ package dev.mzcy.api;
 
 import dev.mzcy.api.configuration.DatabaseConfiguration;
 import dev.mzcy.api.configuration.MessagesConfiguration;
+import dev.mzcy.api.database.DatabaseManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class LootboxesAPI extends JavaPlugin {
@@ -19,5 +20,7 @@ public abstract class LootboxesAPI extends JavaPlugin {
     public abstract DatabaseConfiguration databaseConfiguration();
 
     public abstract MessagesConfiguration messagesConfiguration();
+
+    public abstract DatabaseManager databaseManager();
 
 }

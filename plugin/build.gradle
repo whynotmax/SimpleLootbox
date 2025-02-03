@@ -17,6 +17,7 @@ dependencies {
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     implementation 'org.yaml:snakeyaml:2.0'
+    implementation 'eu.koboo:en2do:3.1.10'
 
     compileOnly "io.papermc.paper:paper-api:${paperVersion}"
 
