@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
+    id 'net.kyori.blossom' version "${blossomVersion}"
+}
+
+compileJava {
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation "org.jetbrains:annotations:${annotationsVersion}"
+
+    compileOnly "io.papermc.paper:paper-api:${paperVersion}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+}

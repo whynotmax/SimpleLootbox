@@ -1,55 +1,41 @@
-plugins {
-    id 'java'
-    id 'application'
-    id "com.gradleup.shadow" version "8.3.5"
-}
+allprojects {
 
-group = 'de.skysaint'
-version = '1.0-SNAPSHOT'
+    apply plugin: 'java'
 
-application {
-    mainClassName = group + ".SkySaintPlugin"
-}
+    group "${authorGroup}"
+    version "${authorVersion}"
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
+    repositories {
+        mavenCentral()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/groups/public/"
+        }
+        maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
+
+        maven { url "https://repo.dmulloy2.net/repository/public/" }
+
+        maven { url "https://repo.codemc.io/repository/maven-snapshots/" }
+
+        maven {
+            name = 'papermc'
+            url = 'https://repo.papermc.io/repository/maven-public/'
+        }
     }
-    maven {
-        name = "jitpack"
-        url = "https://jitpack.io"
-    }
-
-    maven { url "https://repo.dmulloy2.net/repository/public/" }
-
-    maven { url "https://repo.codemc.io/repository/maven-snapshots/" }
-}
-
-dependencies {
-    implementation("eu.koboo:en2do:3.1.9")
-    implementation("fr.mrmicky:fastboard:2.1.3")
-    implementation("org.redisson:redisson:3.28.0") {
-        exclude group: 'io.netty'
-    }
-    implementation("io.netty:netty-all:4.1.68.Final")
-    implementation("net.wesjd:anvilgui:1.10.3-SNAPSHOT")
-
-    compileOnly 'com.github.azbh111:spigot-1.8.8:R'
-    compileOnly 'net.luckperms:api:5.4'
-
-    compileOnly('com.github.DecentSoftware-eu:DecentHolograms:2.8.12')
-
-    implementation('org.reflections:reflections:0.10.2')
-
-    compileOnly("org.projectlombok:lombok:1.18.34")
-    annotationProcessor("org.projectlombok:lombok:1.18.34")
-
-    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
 }
 
-shadowJar {
-    relocate 'io.netty', 'de.skysaint.libraries.io.netty'
+group "${authorGroup}"
+version "${authorVersion}"
+
+tasks.register('cleanProject', Delete) {
+    delete file('logs/')
+    delete file('extensions/')
+    delete file('configs/')
+    delete rootProject.buildDir
+    delete project(':api').buildDir
+    delete project(':plugin').buildDir
 }

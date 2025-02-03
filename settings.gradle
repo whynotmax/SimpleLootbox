@@ -1,2 +1,4 @@
-rootProject.name = 'SkySaint'
+rootProject.name = 'SimpleLootbox'
+include 'api'
+include 'plugin'
 

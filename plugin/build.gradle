@@ -1,0 +1,43 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
+    id 'net.kyori.blossom' version "${blossomVersion}"
+}
+
+compileJava {
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+mainClassName = 'dev.mzcy.plugin.LootboxPlugin'
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation 'org.yaml:snakeyaml:2.0'
+
+    compileOnly "io.papermc.paper:paper-api:${paperVersion}"
+
+    implementation project(":api")
+}
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': mainClassName,
+                'Implementation-Title': rootProject.name,
+                'Implementation-Version': rootProject.version,
+                'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                'Created-By': "Gradle ${gradle.gradleVersion}",
+                'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+        )
+    }
+}
+
+blossom {
+    replaceToken 'PROJECT_NAME', rootProject.name
+    replaceToken 'PROJECT_VERSION', rootProject.version
+}
