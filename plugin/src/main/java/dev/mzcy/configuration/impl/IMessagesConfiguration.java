@@ -2,16 +2,22 @@ package dev.mzcy.configuration.impl;
 
 import dev.mzcy.api.configuration.MessagesConfiguration;
 import dev.mzcy.configuration.Configuration;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Accessors(fluent = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IMessagesConfiguration extends Configuration implements MessagesConfiguration {
 
-    String prefix = "<gray>[<gold>Lootboxes<gray>] <reset>";
-    String noPermission = "<red>You do not have permission to do this.";
+    final String prefix = "<gray>[<gold>Lootboxes<gray>] <reset>";
+    final String noPermission = "<red>You do not have permission to do this.";
 
-    Map<String, String> messages = new HashMap<>() {{
+    final Map<String, String> messages = new HashMap<>() {{
         put("messages.command.not-found", "{0}<red>Subcommand not found.");
         put("messages.command.usage", "{0}<gray>Usage: <gold>{1}");
         put("messages.command.no-permission", "{0}<red>You do not have permission to do this.");

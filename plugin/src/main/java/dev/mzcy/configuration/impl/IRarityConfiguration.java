@@ -3,15 +3,21 @@ package dev.mzcy.configuration.impl;
 import dev.mzcy.api.configuration.RarityConfiguration;
 import dev.mzcy.api.database.lootbox.model.item.rarity.LootboxItemRarity;
 import dev.mzcy.configuration.Configuration;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Accessors(fluent = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IRarityConfiguration extends Configuration implements RarityConfiguration {
 
-    Map<String, LootboxItemRarity> rarities = new HashMap<>() {{
+    final Map<String, LootboxItemRarity> rarities = new HashMap<>() {{
         put("COMMON", new LootboxItemRarity("COMMON", 1, 100.0, 60.0));
         put("UNCOMMON", new LootboxItemRarity("UNCOMMON", 2, 60.0, 30.0));
         put("RARE", new LootboxItemRarity("RARE", 3, 30.0, 7.0));
@@ -21,7 +27,7 @@ public class IRarityConfiguration extends Configuration implements RarityConfigu
         put("UNIQUE", new LootboxItemRarity("UNIQUE", 7, 0.1, 0.0));
     }};
 
-    Map<String, String> displayNames = new HashMap<>() {{
+    final Map<String, String> displayNames = new HashMap<>() {{
         put("COMMON", "<gray><b>Common");
         put("UNCOMMON", "<green><b>Uncommon");
         put("RARE", "<blue><b>Rare");
