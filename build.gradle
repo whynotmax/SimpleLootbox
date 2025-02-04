@@ -24,6 +24,9 @@ allprojects {
             name = 'papermc'
             url = 'https://repo.papermc.io/repository/maven-public/'
         }
+        maven {
+            url 'https://repo.xenondevs.xyz/releases'
+        }
     }
 
 }

@@ -1,11 +1,13 @@
 package dev.mzcy.api.utility;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.ApiStatus;
@@ -16,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * A utility class for building and modifying ItemStack objects in Bukkit.
@@ -290,6 +293,16 @@ public class SimpleItemStack extends ItemStack {
      */
     public SimpleItemStack withDurability(short durability) {
         ((Damageable) this.getItemMeta()).setDamage(durability);
+        return this;
+    }
+
+    /**
+     * Sets the skull owner of the item.
+     * @param uniqueId the unique id of the skull owner
+     * @return the current SimpleItemStack instance
+     */
+    public SimpleItemStack skullOwner(UUID uniqueId) {
+        ((SkullMeta) this.getItemMeta()).setOwningPlayer(Bukkit.getOfflinePlayer(uniqueId));
         return this;
     }
 
