@@ -1,5 +1,9 @@
 package dev.mzcy.api.configuration;
 
+/**
+ * Interface representing the general configuration.
+ * Provides methods for general aspects of the plugin.
+ */
 public interface GeneralConfiguration {
 
     /**
@@ -9,6 +13,6 @@ public interface GeneralConfiguration {
      *
      * @return true if live drops are enabled, false otherwise
      */
-    boolean enableLiveDrops();
+    boolean liveDropsEnabled();
 
 }
