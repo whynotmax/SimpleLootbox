@@ -30,9 +30,6 @@ public class CloseItem extends AbstractItem {
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent inventoryClickEvent) {
         inventoryClickEvent.setCancelled(true);
-        Window window = getWindows().stream().findFirst().orElse(null);
-        if (window != null) {
-            window.close();
-        }
+        getWindows().stream().findFirst().ifPresent(Window::close);
     }
 }

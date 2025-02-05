@@ -44,13 +44,13 @@ public class LootboxPreviewGui {
                         "#xxxxxxx#",
                         "#xxxxxxx#",
                         "#xxxxxxx#",
-                        "##<#A#>##"
+                        "##<#C#>##"
                 )
                 .addIngredient('#', borderItem)
                 .addIngredient('x', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
                 .addIngredient('<', new PreviousPageItem())
                 .addIngredient('>', new NextPageItem())
-                .addIngredient('A', new CloseItem())
+                .addIngredient('C', new CloseItem())
                 .setContent(newItems)
                 .build();
     }
