@@ -1,0 +1,9 @@
+name: SimpleLootbox
+main: dev.mzcy.plugin.LootboxesPlugin
+version: 1.0
+author: mzcy_
+description: SimpleLootbox is a plugin that allows you to create custom lootboxes with custom rewards. This plugin is perfect for any
+  server that wants to add a little extra fun for their players. You can create as many lootboxes as you want and
+  customize them to your liking. You can also create custom rewards for each lootbox, so you can give your players the
+  chance to win some awesome prizes!
+api-version: 1.20
