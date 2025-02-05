@@ -1,16 +1,12 @@
 package dev.mzcy.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 @Getter
@@ -18,23 +14,7 @@ import java.io.IOException;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public abstract class Configuration {
 
-    static Yaml yaml;
-
-    static {
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        options.setPrettyFlow(true);
-
-        LoaderOptions loaderOptions = new LoaderOptions();
-        loaderOptions.setAllowDuplicateKeys(true);
-        loaderOptions.setMaxAliasesForCollections(50); // Adjust for large YAML files
-        loaderOptions.setTagInspector(tag -> true); // ✅ Allow all global tags
-
-        Representer representer = new Representer(options);
-        representer.getPropertyUtils().setSkipMissingProperties(true);
-
-        yaml = new Yaml(new org.yaml.snakeyaml.constructor.Constructor(loaderOptions), representer, options);
-    }
+    private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
 
     public static <T extends Configuration> T load(String filePath, Class<T> clazz) {
         File file = new File(filePath);
@@ -47,19 +27,17 @@ public abstract class Configuration {
                 instance.save(filePath);
                 return instance;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Failed to create configuration file: " + filePath, e);
             }
         }
-        try (FileReader reader = new FileReader(filePath)) {
-            return yaml.loadAs(reader, clazz);
+        try {
+            return YAML_MAPPER.readValue(file, clazz);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to load configuration from: " + filePath, e);
         }
     }
 
     public void save(String filePath) throws IOException {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            yaml.dump(this, writer);
-        }
+        YAML_MAPPER.writeValue(new File(filePath), this);
     }
 }
