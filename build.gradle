@@ -5,6 +5,12 @@ allprojects {
     group "${authorGroup}"
     version "${authorVersion}"
 
+    compileJava {
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        options.encoding = 'UTF-8'
+    }
+
     repositories {
         mavenCentral()
         maven {

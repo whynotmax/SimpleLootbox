@@ -6,9 +6,8 @@ plugins {
     id 'net.kyori.blossom' version "${blossomVersion}"
 }
 
-compileJava {
-    targetCompatibility = JavaVersion.VERSION_17
-    sourceCompatibility = JavaVersion.VERSION_17
+java {
+    withSourcesJar()
 }
 
 mainClassName = 'dev.mzcy.plugin.LootboxPlugin'
