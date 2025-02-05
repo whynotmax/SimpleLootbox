@@ -143,8 +143,8 @@ public class LootboxCommand extends SimpleCommand {
         messages.stream().map(MiniMessage.miniMessage()::deserialize).forEach(Bukkit::broadcast);
 
         Sound sound = plugin.generalConfiguration().lootboxAllSound().sound();
-        float volume = plugin.generalConfiguration().lootboxAllSound().volume();
-        float pitch = plugin.generalConfiguration().lootboxAllSound().pitch();
+        float volume = ((Number) plugin.generalConfiguration().lootboxAllSound().volume()).floatValue();
+        float pitch = ((Number) plugin.generalConfiguration().lootboxAllSound().pitch()).floatValue();
         Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), sound, volume, pitch));
     }
 }

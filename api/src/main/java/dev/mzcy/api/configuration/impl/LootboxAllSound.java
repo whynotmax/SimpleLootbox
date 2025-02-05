@@ -2,6 +2,10 @@ package dev.mzcy.api.configuration.impl;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import dev.mzcy.api.configuration.deserializer.SoundDeserializer;
+import dev.mzcy.api.configuration.serializer.SoundSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,12 +20,15 @@ import org.bukkit.Sound;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class LootboxAllSound {
 
+    @JsonSerialize(using = SoundSerializer.class)
+    @JsonDeserialize(using = SoundDeserializer.class)
     Sound sound;
-    float volume;
-    float pitch;
+
+    double volume;
+    double pitch;
 
     @JsonCreator
-    public LootboxAllSound(@JsonProperty("sound") Sound sound, @JsonProperty("volume") float volume, @JsonProperty("pitch") float pitch) {
+    public LootboxAllSound(@JsonProperty("sound") Sound sound, @JsonProperty("volume") double volume, @JsonProperty("pitch") double pitch) {
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;
