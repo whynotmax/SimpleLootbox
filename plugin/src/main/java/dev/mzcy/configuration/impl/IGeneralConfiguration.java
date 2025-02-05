@@ -6,12 +6,24 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Accessors(fluent = true)
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class IGeneralConfiguration extends Configuration implements GeneralConfiguration {
 
-    final boolean enableLiveDrops = true;
+    boolean enableLiveDrops = true;
+    String dateFormat = "dd.MM.yyyy HH:mm:ss";
+    String liveDropItemTitle = "{time}";
+    List<String> liveDropItemLore = List.of(
+            "§r",
+            "§8• §e{player} §7received",
+            "§8• §e{item} §7from",
+            "§8• §e{lootbox} §7at",
+            "§8• §e{time}",
+            "§r"
+    );
 
     /**
      * What is a live drop?

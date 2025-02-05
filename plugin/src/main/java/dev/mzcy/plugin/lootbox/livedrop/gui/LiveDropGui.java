@@ -36,9 +36,10 @@ public class LiveDropGui {
             if (i < plugin.liveDropManager().liveDrops().size()) {
                 liveDrop = plugin.liveDropManager().liveDrops().get(i);
             }
+            String title = "§e";
             Item item = (liveDrop == null) ? noLiveDropFoundItem : new SimpleItem(SimpleItemStack.builder(Material.PLAYER_HEAD)
                     .skullOwner(liveDrop.winnerUniqueId())
-                    .withDisplayName("TODO")
+                    .withDisplayName(title)
                     .withLore("TODO"));
             normalBuilder.addIngredient((char) ('A' + i), item);
         }
