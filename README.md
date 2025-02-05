@@ -61,7 +61,7 @@ The plugin JAR file will be located in the `plugin/build/libs` folder.
 ## Developer API
 
 SimpleLootbox has a developer API that allows you to create custom lootboxes and rewards programmatically. You can find
-the API documentation [here](https://github.com/whynotmax/SimpleLootbox/wiki/Developer-API).
+the API documentation [here](https://github.com/whynotmax/SimpleLootbox/wiki/Developer%E2%80%90API).
 
 ## Contributing
 
