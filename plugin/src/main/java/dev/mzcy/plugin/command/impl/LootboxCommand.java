@@ -51,13 +51,13 @@ public class LootboxCommand extends SimpleCommand {
                         console.sendMessage("Amount must be between 1 and 64.");
                         return;
                     }
-                    SimpleItemStack item = SimpleItemStack.builder(lootbox.get().material());
+                    SimpleItemStack item = SimpleItemStack.builder(lootbox.get().getMaterial());
                     item.withAmount(amount);
-                    item.withDisplayName(lootbox.get().displayName());
+                    item.withDisplayName(lootbox.get().getDisplayName());
                     for (Player target : console.getServer().getOnlinePlayers()) {
                         target.getInventory().addItem(item);
                         target.sendMessage(
-                                MiniMessage.miniMessage().deserialize(plugin.messagesConfiguration().get("lootbox.give", plugin.messagesConfiguration().getPrefix(), PlainTextComponentSerializer.plainText().serialize(lootbox.get().displayName()), amount, "CONSOLE"))
+                                MiniMessage.miniMessage().deserialize(plugin.messagesConfiguration().get("lootbox.give", plugin.messagesConfiguration().getPrefix(), PlainTextComponentSerializer.plainText().serialize(lootbox.get().getDisplayName()), amount, "CONSOLE"))
                         );
                     }
                     console.sendMessage("Gave lootbox to all players.");
@@ -84,13 +84,13 @@ public class LootboxCommand extends SimpleCommand {
                     console.sendMessage("Amount must be between 1 and 64.");
                     return;
                 }
-                SimpleItemStack item = SimpleItemStack.builder(lootbox.get().material());
+                SimpleItemStack item = SimpleItemStack.builder(lootbox.get().getMaterial());
                 item.withAmount(amount);
-                item.withDisplayName(lootbox.get().displayName());
+                item.withDisplayName(lootbox.get().getDisplayName());
                 //TODO: Add lore to item
                 target.getInventory().addItem(item);
                 target.sendMessage(
-                        MiniMessage.miniMessage().deserialize(plugin.messagesConfiguration().get("lootbox.give", plugin.messagesConfiguration().getPrefix(), PlainTextComponentSerializer.plainText().serialize(lootbox.get().displayName()), amount, "CONSOLE"))
+                        MiniMessage.miniMessage().deserialize(plugin.messagesConfiguration().get("lootbox.give", plugin.messagesConfiguration().getPrefix(), PlainTextComponentSerializer.plainText().serialize(lootbox.get().getDisplayName()), amount, "CONSOLE"))
                 );
                 console.sendMessage("Gave lootbox to player.");
             } else {

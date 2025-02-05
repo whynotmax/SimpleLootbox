@@ -65,12 +65,12 @@ public class LiveDropGui {
         text = text.replace("{time}", new SimpleDateFormat(plugin.generalConfiguration().dateFormat()).format(new Date(liveDrop.wonAt())));
         text = text.replace("{player}", "Username"); //TODO
         text = text.replace("{item}", "Item"); //TODO
-        text = text.replace("{lootbox}", lootbox.name());
+        text = text.replace("{lootbox}", lootbox.getName());
         return text;
     }
 
     public void open(Player player) {
-        Window window = Window.single().setViewer(player).setGui(gui).setTitle("Live Drops: " + lootbox.name()).build(player);
+        Window window = Window.single().setViewer(player).setGui(gui).setTitle("Live Drops: " + lootbox.getName()).build(player);
         window.open();
         window.setCloseable(true);
     }
