@@ -1,6 +1,7 @@
 package dev.mzcy.api.database.lootbox.model;
 
 import dev.mzcy.api.database.lootbox.model.item.LootboxItem;
+import eu.koboo.en2do.repository.entity.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class Lootbox {
 
+    @Id
     String name;
     Component displayName;
     Material material;
