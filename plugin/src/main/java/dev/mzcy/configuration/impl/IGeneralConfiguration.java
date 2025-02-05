@@ -1,10 +1,12 @@
 package dev.mzcy.configuration.impl;
 
 import dev.mzcy.api.configuration.GeneralConfiguration;
+import dev.mzcy.api.configuration.impl.LootboxAllSound;
 import dev.mzcy.configuration.Configuration;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Sound;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
     String dateFormat;
     String liveDropItemTitle;
     List<String> liveDropItemLore;
+    LootboxAllSound lootboxAllSound;
+
 
     public IGeneralConfiguration() {
         enableLiveDrops = true;
@@ -29,6 +33,7 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
                 "§8• §e{time}",
                 "§r"
         );
+        lootboxAllSound = new LootboxAllSound(Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
     }
 
     /**
@@ -56,5 +61,10 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
     @Override
     public List<String> liveDropItemLore() {
         return liveDropItemLore;
+    }
+
+    @Override
+    public LootboxAllSound lootboxAllSound() {
+        return lootboxAllSound;
     }
 }

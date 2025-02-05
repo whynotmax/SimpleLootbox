@@ -1,5 +1,7 @@
 package dev.mzcy.api.configuration;
 
+import dev.mzcy.api.configuration.impl.LootboxAllSound;
+
 import java.util.List;
 
 /**
@@ -37,5 +39,12 @@ public interface GeneralConfiguration {
      * @return the lore for the live drop item
      */
     List<String> liveDropItemLore();
+
+    /**
+     * Gets the sound for the lootbox all broadcasts.
+     *
+     * @return the sound for the lootbox all broadcasts
+     */
+    LootboxAllSound lootboxAllSound();
 
 }
