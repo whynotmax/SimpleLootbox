@@ -32,6 +32,8 @@ public abstract class Configuration {
         File file = new File(filePath);
         if (!file.exists()) {
             try {
+                File folder = file.getParentFile();
+                if (!folder.exists()) folder.mkdirs();
                 file.createNewFile();
                 T instance = clazz.getDeclaredConstructor().newInstance();
                 instance.save(filePath);
