@@ -1,6 +1,7 @@
 allprojects {
 
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
     group "${authorGroup}"
     version "${authorVersion}"
@@ -32,6 +33,14 @@ allprojects {
         }
         maven {
             url 'https://repo.xenondevs.xyz/releases'
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
         }
     }
 
