@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class ILootbox implements Lootbox {
+public class ILootbox extends Lootbox {
 
     String name;
     Component displayName;
