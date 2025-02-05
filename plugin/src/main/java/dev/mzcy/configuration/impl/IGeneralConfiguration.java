@@ -33,7 +33,7 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
                 "§8• §e{time}",
                 "§r"
         );
-        lootboxAllSound = new LootboxAllSound(Sound.BLOCK_NOTE_BLOCK_PLING, 0.8D, 2.0D);
+        lootboxAllSound = new LootboxAllSound(Sound.BLOCK_NOTE_BLOCK_PLING, 0.8F, 2.0F);
     }
 
     /**
