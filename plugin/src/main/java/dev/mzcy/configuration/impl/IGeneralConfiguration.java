@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @Getter
-@Accessors(fluent = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IGeneralConfiguration extends Configuration implements GeneralConfiguration {
 
@@ -42,5 +41,20 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
     @Override
     public boolean liveDropsEnabled() {
         return enableLiveDrops;
+    }
+
+    @Override
+    public String dateFormat() {
+        return dateFormat;
+    }
+
+    @Override
+    public String liveDropItemTitle() {
+        return liveDropItemTitle;
+    }
+
+    @Override
+    public List<String> liveDropItemLore() {
+        return liveDropItemLore;
     }
 }

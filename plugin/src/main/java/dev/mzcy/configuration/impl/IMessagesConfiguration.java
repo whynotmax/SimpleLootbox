@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@Accessors(fluent = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IMessagesConfiguration extends Configuration implements MessagesConfiguration {
 
