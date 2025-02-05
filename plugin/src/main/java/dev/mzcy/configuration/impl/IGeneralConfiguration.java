@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Accessors(fluent = true)
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IGeneralConfiguration extends Configuration implements GeneralConfiguration {
 
     boolean enableLiveDrops = true;

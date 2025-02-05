@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -23,9 +24,16 @@ public abstract class Configuration {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
+
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setAllowDuplicateKeys(true);
+        loaderOptions.setMaxAliasesForCollections(50); // Adjust for large YAML files
+        loaderOptions.setTagInspector(tag -> true); // ✅ Allow all global tags
+
         Representer representer = new Representer(options);
         representer.getPropertyUtils().setSkipMissingProperties(true);
-        yaml = new Yaml(representer, options);
+
+        yaml = new Yaml(new org.yaml.snakeyaml.constructor.Constructor(loaderOptions), representer, options);
     }
 
     public static <T extends Configuration> T load(String filePath, Class<T> clazz) {
