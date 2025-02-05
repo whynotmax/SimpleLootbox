@@ -17,25 +17,31 @@ import java.util.Map;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IRarityConfiguration extends Configuration implements RarityConfiguration {
 
-    final Map<String, LootboxItemRarity> rarities = new HashMap<>() {{
-        put("COMMON", new LootboxItemRarity("COMMON", 1, 100.0, 60.0));
-        put("UNCOMMON", new LootboxItemRarity("UNCOMMON", 2, 60.0, 30.0));
-        put("RARE", new LootboxItemRarity("RARE", 3, 30.0, 7.0));
-        put("EPIC", new LootboxItemRarity("EPIC", 4, 7.0, 2.0));
-        put("LEGENDARY", new LootboxItemRarity("LEGENDARY", 5, 2.0, 0.5));
-        put("MYTHIC", new LootboxItemRarity("MYTHIC", 6, 0.5, 0.1));
-        put("UNIQUE", new LootboxItemRarity("UNIQUE", 7, 0.1, 0.0));
-    }};
+    final Map<String, LootboxItemRarity> rarities;
 
-    final Map<String, String> displayNames = new HashMap<>() {{
-        put("COMMON", "<gray><b>Common");
-        put("UNCOMMON", "<green><b>Uncommon");
-        put("RARE", "<blue><b>Rare");
-        put("EPIC", "<purple><b>Epic");
-        put("LEGENDARY", "<gold><b>Legendary");
-        put("MYTHIC", "<red><b>Mythic");
-        put("UNIQUE", "<dark_purple><b>Unique");
-    }};
+    final Map<String, String> displayNames;
+
+    public IRarityConfiguration() {
+        this.rarities = new HashMap<>() {{
+            put("COMMON", new LootboxItemRarity("COMMON", 1, 100.0, 60.0));
+            put("UNCOMMON", new LootboxItemRarity("UNCOMMON", 2, 60.0, 30.0));
+            put("RARE", new LootboxItemRarity("RARE", 3, 30.0, 7.0));
+            put("EPIC", new LootboxItemRarity("EPIC", 4, 7.0, 2.0));
+            put("LEGENDARY", new LootboxItemRarity("LEGENDARY", 5, 2.0, 0.5));
+            put("MYTHIC", new LootboxItemRarity("MYTHIC", 6, 0.5, 0.1));
+            put("UNIQUE", new LootboxItemRarity("UNIQUE", 7, 0.1, 0.0));
+        }};
+
+        this.displayNames = new HashMap<>() {{
+            put("COMMON", "<gray><b>Common");
+            put("UNCOMMON", "<green><b>Uncommon");
+            put("RARE", "<blue><b>Rare");
+            put("EPIC", "<purple><b>Epic");
+            put("LEGENDARY", "<gold><b>Legendary");
+            put("MYTHIC", "<red><b>Mythic");
+            put("UNIQUE", "<dark_purple><b>Unique");
+        }};
+    }
 
     @Override
     public LootboxItemRarity get(String name) {
