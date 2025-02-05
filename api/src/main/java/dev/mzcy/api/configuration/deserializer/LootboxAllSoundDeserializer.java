@@ -19,8 +19,8 @@ public class LootboxAllSoundDeserializer extends JsonDeserializer<LootboxAllSoun
         String soundString = node.get("sound").asText();  // Sound name as string
         Sound sound = Sound.valueOf(soundString);         // Convert to Sound enum
 
-        double volume = node.get("volume").doubleValue();      // Get volume value
-        double pitch = node.get("pitch").doubleValue();        // Get pitch value
+        float volume = node.get("volume").floatValue();      // Get volume value
+        float pitch = node.get("pitch").floatValue();        // Get pitch value
 
         // Create and return the LootboxAllSound instance
         return new LootboxAllSound(sound, volume, pitch);
