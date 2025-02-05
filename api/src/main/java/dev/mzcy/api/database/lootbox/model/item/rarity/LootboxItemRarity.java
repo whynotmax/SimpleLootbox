@@ -1,5 +1,9 @@
 package dev.mzcy.api.database.lootbox.model.item.rarity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import dev.mzcy.api.database.lootbox.model.item.rarity.serializer.LootboxItemRaritySerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +21,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Accessors(fluent = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonSerialize(using = LootboxItemRaritySerializer.class)
 public class LootboxItemRarity {
 
     /**
