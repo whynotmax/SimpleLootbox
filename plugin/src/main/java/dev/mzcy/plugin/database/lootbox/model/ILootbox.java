@@ -43,4 +43,24 @@ public class ILootbox implements Lootbox {
     public List<LootboxItem> items() {
         return items;
     }
+
+    @Override
+    public void name(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void displayName(Component displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
+    public void material(Material material) {
+        this.material = material;
+    }
+
+    @Override
+    public void items(List<LootboxItem> items) {
+        this.items = items;
+    }
 }
