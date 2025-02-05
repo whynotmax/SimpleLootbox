@@ -36,6 +36,9 @@ allprojects {
         }
     }
 
+}
+
+subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
@@ -43,7 +46,6 @@ allprojects {
             }
         }
     }
-
 }
 
 group "${authorGroup}"
