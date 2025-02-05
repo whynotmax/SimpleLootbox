@@ -3,6 +3,7 @@ package dev.mzcy.plugin;
 import dev.mzcy.api.LootboxesAPI;
 import dev.mzcy.configuration.Configuration;
 import dev.mzcy.configuration.impl.IDatabaseConfiguration;
+import dev.mzcy.configuration.impl.IGeneralConfiguration;
 import dev.mzcy.configuration.impl.IMessagesConfiguration;
 import dev.mzcy.configuration.impl.IRarityConfiguration;
 import dev.mzcy.plugin.database.IDatabaseManager;
@@ -19,6 +20,7 @@ public class LootboxesPlugin extends LootboxesAPI {
 
     IDatabaseConfiguration databaseConfiguration;
     IMessagesConfiguration messagesConfiguration;
+    IGeneralConfiguration generalConfiguration;
     IRarityConfiguration rarityConfiguration;
     IDatabaseManager databaseManager;
     ILiveDropManager liveDropManager;
@@ -27,6 +29,7 @@ public class LootboxesPlugin extends LootboxesAPI {
     public void onEnable() {
         databaseConfiguration = Configuration.load(getDataFolder().getAbsolutePath() + "/database.yml", IDatabaseConfiguration.class);
         messagesConfiguration = Configuration.load(getDataFolder().getAbsolutePath() + "/messages.yml", IMessagesConfiguration.class);
+        generalConfiguration = Configuration.load(getDataFolder().getAbsolutePath() + "/general.yml", IGeneralConfiguration.class);
         rarityConfiguration = Configuration.load(getDataFolder().getAbsolutePath() + "/rarity.yml", IRarityConfiguration.class);
         databaseManager = new IDatabaseManager(this);
         liveDropManager = new ILiveDropManager();

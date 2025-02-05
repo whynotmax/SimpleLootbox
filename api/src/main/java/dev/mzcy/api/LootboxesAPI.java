@@ -1,6 +1,7 @@
 package dev.mzcy.api;
 
 import dev.mzcy.api.configuration.DatabaseConfiguration;
+import dev.mzcy.api.configuration.GeneralConfiguration;
 import dev.mzcy.api.configuration.MessagesConfiguration;
 import dev.mzcy.api.configuration.RarityConfiguration;
 import dev.mzcy.api.database.DatabaseManager;
@@ -46,6 +47,13 @@ public abstract class LootboxesAPI extends JavaPlugin {
      * @return the messages configuration
      */
     public abstract MessagesConfiguration messagesConfiguration();
+
+    /**
+     * Gets the general configuration.
+     *
+     * @return the general configuration
+     */
+    public abstract GeneralConfiguration generalConfiguration();
 
     /**
      * Gets the rarity configuration.
