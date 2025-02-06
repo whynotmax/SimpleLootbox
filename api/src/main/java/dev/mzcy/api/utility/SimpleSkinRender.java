@@ -1,4 +1,4 @@
-package dev.mzcy.plugin.utility;
+package dev.mzcy.api.utility;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class SkinRender {
+public class SimpleSkinRender {
 
     private static final Cache<UUID, BufferedImage> skinCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.HOURS)
@@ -30,7 +30,7 @@ public class SkinRender {
     private UUID uniqueId;
     private boolean useHexColors = false;
 
-    private SkinRender() {
+    private SimpleSkinRender() {
     }
 
     public static Builder builder() {
@@ -69,21 +69,14 @@ public class SkinRender {
         }
     }
 
-    public final Component[] render() {
-        Optional<BufferedImage> skinImageOptional = fetchSkinImage(uniqueId);
-        if (skinImageOptional.isEmpty()) {
-            throw new IllegalStateException("Skin image not found");
-        }
-
-        BufferedImage image = skinImageOptional.get();
-        int width = 8;
-        int height = 8;
-        Component[] result = new Component[height];
+    public Component[] render() {
+        BufferedImage image = fetchSkinImage(uniqueId).orElseThrow(() -> new IllegalStateException("Skin image not found"));
+        Component[] result = new Component[8];
         MiniMessage miniMessage = MiniMessage.miniMessage();
 
-        for (int y = 0; y < height; y++) {
+        for (int y = 0; y < 8; y++) {
             StringBuilder line = new StringBuilder();
-            for (int x = 0; x < width; x++) {
+            for (int x = 0; x < 8; x++) {
                 Color color = new Color(image.getRGB(x, y));
                 String hexColor = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
                 line.append("<color:").append(hexColor).append(">█</color>");
@@ -95,23 +88,20 @@ public class SkinRender {
     }
 
     public static class Builder {
-        private final SkinRender skinRender = new SkinRender();
+        private final SimpleSkinRender simpleSkinRender = new SimpleSkinRender();
 
-        public Builder() {
-        }
-
-        public final Builder fromUniqueId(UUID uniqueId) {
-            this.skinRender.uniqueId = uniqueId;
+        public Builder fromUniqueId(UUID uniqueId) {
+            this.simpleSkinRender.uniqueId = uniqueId;
             return this;
         }
 
-        public final Builder useHexColors() {
-            this.skinRender.useHexColors = true;
+        public Builder useHexColors() {
+            this.simpleSkinRender.useHexColors = true;
             return this;
         }
 
-        public final SkinRender build() {
-            return this.skinRender;
+        public SimpleSkinRender build() {
+            return this.simpleSkinRender;
         }
     }
 }
