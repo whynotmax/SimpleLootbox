@@ -1,29 +1,40 @@
 package dev.mzcy.configuration.impl;
 
 import dev.mzcy.api.configuration.GeneralConfiguration;
+import dev.mzcy.api.configuration.impl.LootboxAllSound;
 import dev.mzcy.configuration.Configuration;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Sound;
 
 import java.util.List;
 
 @Getter
-@Accessors(fluent = true)
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IGeneralConfiguration extends Configuration implements GeneralConfiguration {
 
-    boolean enableLiveDrops = true;
-    String dateFormat = "dd.MM.yyyy HH:mm:ss";
-    String liveDropItemTitle = "{time}";
-    List<String> liveDropItemLore = List.of(
-            "§r",
-            "§8• §e{player} §7received",
-            "§8• §e{item} §7from",
-            "§8• §e{lootbox} §7at",
-            "§8• §e{time}",
-            "§r"
-    );
+    boolean enableLiveDrops;
+    String dateFormat;
+    String liveDropItemTitle;
+    List<String> liveDropItemLore;
+    LootboxAllSound lootboxAllSound;
+
+
+    public IGeneralConfiguration() {
+        enableLiveDrops = true;
+        dateFormat = "dd.MM.yyyy HH:mm:ss";
+        liveDropItemTitle = "{time}";
+        liveDropItemLore = List.of(
+                "§r",
+                "§8• §e{player} §7received",
+                "§8• §e{item} §7from",
+                "§8• §e{lootbox} §7at",
+                "§8• §e{time}",
+                "§r"
+        );
+        lootboxAllSound = new LootboxAllSound(Sound.BLOCK_NOTE_BLOCK_PLING, 0.8F, 2.0F);
+    }
 
     /**
      * What is a live drop?
@@ -35,5 +46,25 @@ public class IGeneralConfiguration extends Configuration implements GeneralConfi
     @Override
     public boolean liveDropsEnabled() {
         return enableLiveDrops;
+    }
+
+    @Override
+    public String dateFormat() {
+        return dateFormat;
+    }
+
+    @Override
+    public String liveDropItemTitle() {
+        return liveDropItemTitle;
+    }
+
+    @Override
+    public List<String> liveDropItemLore() {
+        return liveDropItemLore;
+    }
+
+    @Override
+    public LootboxAllSound lootboxAllSound() {
+        return lootboxAllSound;
     }
 }

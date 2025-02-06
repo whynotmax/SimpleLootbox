@@ -1,5 +1,9 @@
 package dev.mzcy.api.database.lootbox.model.item.rarity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import dev.mzcy.api.database.lootbox.model.item.rarity.serializer.LootboxItemRaritySerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +18,9 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Accessors(fluent = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonSerialize(using = LootboxItemRaritySerializer.class)
 public class LootboxItemRarity {
 
     /**
@@ -38,5 +42,20 @@ public class LootboxItemRarity {
      * The maximum chance of obtaining an item with this rarity.
      */
     double maxChance;
+
+    /**
+     * Constructs a new LootboxItemRarity instance.
+     * @param name the name of the rarity
+     * @param weight the weight of the rarity
+     * @param minChance the minimum chance of obtaining an item with this rarity
+     * @param maxChance the maximum chance of obtaining an item with this rarity
+     */
+    @JsonCreator
+    public LootboxItemRarity(@JsonProperty("name") String name, @JsonProperty("weight") int weight, @JsonProperty("minChance") double minChance, @JsonProperty("maxChance") double maxChance) {
+        this.name = name;
+        this.weight = weight;
+        this.minChance = minChance;
+        this.maxChance = maxChance;
+    }
 
 }

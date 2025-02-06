@@ -1,6 +1,7 @@
 allprojects {
 
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
     group "${authorGroup}"
     version "${authorVersion}"
@@ -35,6 +36,16 @@ allprojects {
         }
     }
 
+}
+
+subprojects {
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
 }
 
 group "${authorGroup}"

@@ -2,6 +2,9 @@ package dev.mzcy.api.utility;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * Utility class providing utility methods.
+ */
 @UtilityClass
 public class Utility {
 

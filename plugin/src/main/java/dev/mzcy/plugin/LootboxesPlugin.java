@@ -6,6 +6,7 @@ import dev.mzcy.configuration.impl.IDatabaseConfiguration;
 import dev.mzcy.configuration.impl.IGeneralConfiguration;
 import dev.mzcy.configuration.impl.IMessagesConfiguration;
 import dev.mzcy.configuration.impl.IRarityConfiguration;
+import dev.mzcy.plugin.command.CommandManager;
 import dev.mzcy.plugin.database.IDatabaseManager;
 import dev.mzcy.plugin.lootbox.livedrop.ILiveDropManager;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class LootboxesPlugin extends LootboxesAPI {
     IRarityConfiguration rarityConfiguration;
     IDatabaseManager databaseManager;
     ILiveDropManager liveDropManager;
+    CommandManager commandManager;
 
     @Override
     public void onEnable() {
@@ -33,6 +35,7 @@ public class LootboxesPlugin extends LootboxesAPI {
         rarityConfiguration = Configuration.load(getDataFolder().getAbsolutePath() + "/rarity.yml", IRarityConfiguration.class);
         databaseManager = new IDatabaseManager(this);
         liveDropManager = new ILiveDropManager();
+        commandManager = new CommandManager(this);
 
         InvUI.getInstance().setPlugin(this);
     }

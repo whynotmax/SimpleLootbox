@@ -31,7 +31,7 @@ public class LootboxPreviewGui {
         this.lootbox = lootbox;
         this.borderItem = new SimpleItem(SimpleItemStack.builder(Material.BLACK_STAINED_GLASS_PANE).withDisplayName("§r"));
 
-        List<LootboxItem> items = new ArrayList<>(lootbox.items());
+        List<LootboxItem> items = new ArrayList<>(lootbox.getItems());
         List<Item> newItems = new ArrayList<>();
 
         for (LootboxItem itemStack : items) {
@@ -56,7 +56,7 @@ public class LootboxPreviewGui {
     }
 
     public void open(Player player) {
-        Window window = Window.single().setViewer(player).setGui(gui).setTitle("Preview: " + lootbox.name()).build(player);
+        Window window = Window.single().setViewer(player).setGui(gui).setTitle("Preview: " + lootbox.getName()).build(player);
         window.open();
         window.setCloseable(true);
     }

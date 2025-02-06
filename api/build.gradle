@@ -11,8 +11,10 @@ java {
 
 dependencies {
     implementation "org.jetbrains:annotations:${annotationsVersion}"
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
 
     compileOnly "io.papermc.paper:paper-api:${paperVersion}"
+    compileOnly "eu.koboo:en2do:3.1.10"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"

@@ -18,7 +18,7 @@ public class ILootboxManager implements LootboxManager {
 
     public ILootboxManager(LootboxRepository repository) {
         this.repository = repository;
-        this.lootboxes = new HashMap<>(repository.findAll().stream().map(lootbox -> Map.entry(lootbox.name(), lootbox)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        this.lootboxes = new HashMap<>(repository.findAll().stream().map(lootbox -> Map.entry(lootbox.getName(), lootbox)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ILootboxManager implements LootboxManager {
 
     @Override
     public Optional<Lootbox> get(Component displayName) {
-        return lootboxes.values().stream().filter(lootbox -> lootbox.displayName().equals(displayName)).findFirst();
+        return lootboxes.values().stream().filter(lootbox -> lootbox.getDisplayName().equals(displayName)).findFirst();
     }
 
     @Override
@@ -38,13 +38,13 @@ public class ILootboxManager implements LootboxManager {
 
     @Override
     public void save(Lootbox lootbox) {
-        lootboxes.put(lootbox.name(), lootbox);
+        lootboxes.put(lootbox.getName(), lootbox);
         repository.save(lootbox);
     }
 
     @Override
     public void delete(Lootbox lootbox) {
-        lootboxes.remove(lootbox.name());
+        lootboxes.remove(lootbox.getName());
         repository.delete(lootbox);
     }
 
@@ -58,9 +58,9 @@ public class ILootboxManager implements LootboxManager {
 
     @Override
     public void delete(Component displayName) {
-        Lootbox lootbox = lootboxes.values().stream().filter(l -> l.displayName().equals(displayName)).findFirst().orElse(null);
+        Lootbox lootbox = lootboxes.values().stream().filter(l -> l.getDisplayName().equals(displayName)).findFirst().orElse(null);
         if (lootbox != null) {
-            lootboxes.remove(lootbox.name());
+            lootboxes.remove(lootbox.getName());
             repository.delete(lootbox);
         }
     }
@@ -69,7 +69,7 @@ public class ILootboxManager implements LootboxManager {
     public void delete(Class<? extends Lootbox> clazz) {
         Lootbox lootbox = lootboxes.values().stream().filter(clazz::isInstance).findFirst().orElse(null);
         if (lootbox != null) {
-            lootboxes.remove(lootbox.name());
+            lootboxes.remove(lootbox.getName());
             repository.delete(lootbox);
         }
     }

@@ -9,8 +9,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class IDatabaseConfiguration extends Configuration implements DatabaseConfiguration {
 
-    final String mongoConnectionUri = "mongodb://localhost:27017";
-    final String mongoDatabase = "lootboxes";
-    final String mongoCollectionPrefix = "lb_";
+    final String mongoConnectionUri;
+    final String mongoDatabase;
+    final String mongoCollectionPrefix;
+
+    public IDatabaseConfiguration() {
+        this.mongoConnectionUri = "mongodb://localhost:27017";
+        this.mongoDatabase = "lootboxes";
+        this.mongoCollectionPrefix = "lb_";
+    }
 
 }
