@@ -6,11 +6,9 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import dev.mzcy.api.database.lootbox.model.Lootbox;
 import dev.mzcy.api.utility.SimpleItemStack;
-import dev.mzcy.api.utility.SimpleUUIDFetcher;
 import dev.mzcy.api.utility.Utility;
 import dev.mzcy.plugin.LootboxesPlugin;
 import dev.mzcy.plugin.command.model.SimpleCommand;
-import dev.mzcy.plugin.utility.SkinRender;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -24,7 +22,6 @@ import org.bukkit.entity.TextDisplay;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,11 +33,10 @@ public class LootboxCommand extends SimpleCommand {
 
     @Override
     public void run(CommandSender sender, String[] arguments) {
-        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
-            handleConsoleCommand(consoleCommandSender, arguments);
+        if (sender instanceof ConsoleCommandSender) {
+            handleConsoleCommand((ConsoleCommandSender) sender, arguments);
         } else {
-            Player player = (Player) sender;
-            handlePlayerCommand(player, arguments);
+            handlePlayerCommand((Player) sender, arguments);
         }
     }
 
@@ -49,94 +45,108 @@ public class LootboxCommand extends SimpleCommand {
             player.sendMessage("Usage: /lootbox <give> <lootbox> <amount>");
             return;
         }
-        if (arguments[0].equals("give")) {
-            if (arguments.length < 3) {
-                player.sendMessage("Usage: /lootbox give <player/all> <lootbox> <amount>");
-                return;
-            }
-            if (arguments[1].equalsIgnoreCase("all")) {
-                giveLootboxToAll(player, arguments[2], arguments[3]);
-            } else {
-                giveLootboxToPlayer(player, arguments[1], arguments[2], arguments[3]);
-            }
-        } else if (arguments[0].equals("preview")) {
-            if (arguments.length < 2) {
-                player.sendMessage("Usage: /lootbox preview <lootbox>");
-            }
-            Lootbox lootbox = plugin.databaseManager().lootboxManager().get(arguments[1]).orElse(null);
-            if (lootbox == null) {
-                player.sendMessage("Lootbox not found.");
-                return;
-            }
-            if (!plugin.fancyHologramsEnabled()) {
-                player.sendMessage("FancyHolograms is not enabled! This means that we can't spawn any holograms at this time (maybe in the next update) as I don't want to code my own hologram implementation at this moment. Sorry!");
-                return;
-            }
-            if (FancyHologramsPlugin.get().getHologramManager().getHologram("lb-prev-" + lootbox.getName()).isEmpty()) {
-                BlockHologramData hologramData = new BlockHologramData("lb-prev-" + lootbox.getName(), player.getLocation());
-                hologramData.setBlock(lootbox.getMaterial());
-                hologramData.setScale(new Vector3f(2, 2, 2));
-                Hologram blockHologram = FancyHologramsPlugin.get().getHologramManager().create(hologramData);
-                FancyHologramsPlugin.get().getHologramManager().addHologram(blockHologram);
-                TextHologramData textHologramData = new TextHologramData("lb-prev-text-" + lootbox.getName(), player.getLocation().add(0, 2.3, 0));
-                textHologramData.setText(List.of(
-                        MiniMessage.miniMessage().serialize(lootbox.getDisplayName()),
-                        "§8§m                  §r",
-                        "§7§oPreview §8• §7§oRightclick to open"
-                ));
-                textHologramData.setTextAlignment(TextDisplay.TextAlignment.CENTER);
-                textHologramData.setTextUpdateInterval(20);
-                textHologramData.setScale(new Vector3f(1.5f, 1.5f, 1.5f));
-                textHologramData.setBackground(Color.fromARGB(0));
-                Hologram textHologram = FancyHologramsPlugin.get().getHologramManager().create(textHologramData);
-                FancyHologramsPlugin.get().getHologramManager().addHologram(textHologram);
-                player.sendMessage("Lootbox preview created. To remove it, use this command again.");
-                return;
-            }
-            FancyHologramsPlugin.get().getHologramManager().getHologram("lb-prev-" + lootbox.getName()).ifPresent(Hologram::deleteHologram);
-            FancyHologramsPlugin.get().getHologramManager().getHologram("lb-prev-text-" + lootbox.getName()).ifPresent(Hologram::deleteHologram);
-            player.sendMessage("Lootbox preview removed. To create it again, use this command.");
-        } else {
-            player.sendMessage("Usage: /lootbox <give> <player/all> <lootbox> <amount>");
+        switch (arguments[0]) {
+            case "give":
+                handleGiveCommand(player, arguments);
+                break;
+            case "preview":
+                handlePreviewCommand(player, arguments);
+                break;
+            default:
+                player.sendMessage("Usage: /lootbox <give> <player/all> <lootbox> <amount>");
         }
     }
 
     private void handleConsoleCommand(ConsoleCommandSender sender, String[] arguments) {
         if (arguments.length == 0) {
             sender.sendMessage("Usage: /lootbox <give> <player/all> <lootbox> <amount>");
-            sender.sendMessage("Usage: /lootbox <preview> <lootbox>");
             return;
         }
-        if (arguments[0].equals("give")) {
-            if (arguments.length < 4) {
-                sender.sendMessage("Usage: /lootbox give <player> <lootbox> <amount>");
-                return;
-            }
-            if (arguments[1].equalsIgnoreCase("all")) {
-                giveLootboxToAll(sender, arguments[2], arguments[3]);
-            } else {
-                giveLootboxToPlayer(sender, arguments[1], arguments[2], arguments[3]);
-            }
+        if ("give".equals(arguments[0])) {
+            handleGiveCommand(sender, arguments);
         } else {
             sender.sendMessage("Usage: /lootbox <give> <player> <lootbox> <amount>");
         }
     }
 
+    private void handleGiveCommand(CommandSender sender, String[] arguments) {
+        if (arguments.length < 4) {
+            sender.sendMessage("Usage: /lootbox give <player/all> <lootbox> <amount>");
+            return;
+        }
+        if ("all".equalsIgnoreCase(arguments[1])) {
+            giveLootboxToAll(sender, arguments[2], arguments[3]);
+        } else {
+            giveLootboxToPlayer(sender, arguments[1], arguments[2], arguments[3]);
+        }
+    }
+
+    private void handlePreviewCommand(Player player, String[] arguments) {
+        if (arguments.length < 2) {
+            player.sendMessage("Usage: /lootbox preview <lootbox>");
+            return;
+        }
+        Optional<Lootbox> lootboxOpt = plugin.databaseManager().lootboxManager().get(arguments[1]);
+        if (lootboxOpt.isEmpty()) {
+            player.sendMessage("Lootbox not found.");
+            return;
+        }
+        Lootbox lootbox = lootboxOpt.get();
+        if (!plugin.fancyHologramsEnabled()) {
+            player.sendMessage("FancyHolograms is not enabled!");
+            return;
+        }
+        String hologramId = "lb-prev-" + lootbox.getName();
+        if (FancyHologramsPlugin.get().getHologramManager().getHologram(hologramId).isEmpty()) {
+            createHologram(player, lootbox, hologramId);
+            player.sendMessage("Lootbox preview created. To remove it, use this command again.");
+        } else {
+            removeHologram(hologramId);
+            player.sendMessage("Lootbox preview removed. To create it again, use this command.");
+        }
+    }
+
+    private void createHologram(Player player, Lootbox lootbox, String hologramId) {
+        BlockHologramData blockData = new BlockHologramData(hologramId, player.getLocation());
+        blockData.setBlock(lootbox.getMaterial());
+        blockData.setScale(new Vector3f(2, 2, 2));
+        Hologram blockHologram = FancyHologramsPlugin.get().getHologramManager().create(blockData);
+        FancyHologramsPlugin.get().getHologramManager().addHologram(blockHologram);
+
+        TextHologramData textData = new TextHologramData(hologramId + "-text", player.getLocation().add(0, 2.3, 0));
+        textData.setText(List.of(
+                MiniMessage.miniMessage().serialize(lootbox.getDisplayName()),
+                "§8§m                  §r",
+                "§7§oPreview §8• §7§oRightclick to open"
+        ));
+        textData.setTextAlignment(TextDisplay.TextAlignment.CENTER);
+        textData.setTextUpdateInterval(20);
+        textData.setScale(new Vector3f(1.5f, 1.5f, 1.5f));
+        textData.setBackground(Color.fromARGB(0));
+        Hologram textHologram = FancyHologramsPlugin.get().getHologramManager().create(textData);
+        FancyHologramsPlugin.get().getHologramManager().addHologram(textHologram);
+    }
+
+    private void removeHologram(String hologramId) {
+        FancyHologramsPlugin.get().getHologramManager().getHologram(hologramId).ifPresent(Hologram::deleteHologram);
+        FancyHologramsPlugin.get().getHologramManager().getHologram(hologramId + "-text").ifPresent(Hologram::deleteHologram);
+    }
+
     private void giveLootboxToAll(CommandSender sender, String lootboxName, String amountStr) {
-        Optional<Lootbox> lootbox = plugin.databaseManager().lootboxManager().get(lootboxName);
-        if (lootbox.isEmpty()) {
+        Optional<Lootbox> lootboxOpt = plugin.databaseManager().lootboxManager().get(lootboxName);
+        if (lootboxOpt.isEmpty()) {
             sender.sendMessage("Lootbox not found.");
             return;
         }
         int amount = parseAmount(sender, amountStr);
         if (amount == -1) return;
 
-        SimpleItemStack item = createLootboxItem(lootbox.get(), amount);
+        SimpleItemStack item = createLootboxItem(lootboxOpt.get(), amount);
         for (Player target : sender.getServer().getOnlinePlayers()) {
             target.getInventory().addItem(item);
-            target.sendMessage(createLootboxMessage(lootbox.get(), amount, "CONSOLE"));
+            target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? sender.getName() : "CONSOLE"));
         }
-        sendLootboxAllMessage(lootbox.get(), amount, new UUID(0, 0));
+        sendLootboxAllMessage(lootboxOpt.get(), amount, new UUID(0, 0));
         sender.sendMessage("Gave lootbox to all players.");
     }
 
@@ -146,41 +156,37 @@ public class LootboxCommand extends SimpleCommand {
             sender.sendMessage("Player not found.");
             return;
         }
-        Optional<Lootbox> lootbox = plugin.databaseManager().lootboxManager().get(lootboxName);
-        if (lootbox.isEmpty()) {
+        Optional<Lootbox> lootboxOpt = plugin.databaseManager().lootboxManager().get(lootboxName);
+        if (lootboxOpt.isEmpty()) {
             sender.sendMessage("Lootbox not found.");
             return;
         }
         int amount = parseAmount(sender, amountStr);
         if (amount == -1) return;
 
-        SimpleItemStack item = createLootboxItem(lootbox.get(), amount);
+        SimpleItemStack item = createLootboxItem(lootboxOpt.get(), amount);
         target.getInventory().addItem(item);
-        target.sendMessage(createLootboxMessage(lootbox.get(), amount, "CONSOLE"));
+        target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, "CONSOLE"));
         sender.sendMessage("Gave lootbox to player.");
     }
 
     private int parseAmount(CommandSender sender, String amountStr) {
-        int amount;
         try {
-            amount = Integer.parseInt(amountStr);
+            int amount = Integer.parseInt(amountStr);
+            if (Utility.inRange(amount, 1, 64)) {
+                return amount;
+            }
+            sender.sendMessage("Amount must be between 1 and 64.");
         } catch (NumberFormatException e) {
             sender.sendMessage("Invalid amount.");
-            return -1;
         }
-        if (!Utility.inRange(amount, 1, 64)) {
-            sender.sendMessage("Amount must be between 1 and 64.");
-            return -1;
-        }
-        return amount;
+        return -1;
     }
 
     private SimpleItemStack createLootboxItem(Lootbox lootbox, int amount) {
-        SimpleItemStack item = SimpleItemStack.builder(lootbox.getMaterial());
-        item.withAmount(amount);
-        item.withDisplayName(lootbox.getDisplayName());
-        //TODO: Add lore to item
-        return item;
+        return SimpleItemStack.builder(lootbox.getMaterial())
+                .withAmount(amount)
+                .withDisplayName(lootbox.getDisplayName());
     }
 
     private Component createLootboxMessage(Lootbox lootbox, int amount, String sender) {
@@ -191,20 +197,11 @@ public class LootboxCommand extends SimpleCommand {
     }
 
     private void sendLootboxAllMessage(Lootbox lootbox, int amount, UUID sender) {
-        SkinRender skinRender = new SkinRender.Builder().fromUniqueId(sender).useHexColors().build();
-        Component[] skinRendered = !Objects.equals(sender, new UUID(0, 0)) ? skinRender.render() : null;
-
         List<String> messages = plugin.messagesConfiguration().getLootboxAllBroadcast();
-        for (int i = 0; i < messages.size(); i++) {
-            if (skinRendered != null) {
-                messages.set(i, messages.get(i).replace("{skin" + i + "}", MiniMessage.miniMessage().serialize(skinRendered[i])));
-            } else {
-                messages.set(i, messages.get(i).replace("{skin" + i + "}", ""));
-            }
-            messages.set(i, messages.get(i).replace("{1}", lootbox.getDisplayName().toString()));
-            messages.set(i, messages.get(i).replace("{2}", String.valueOf(amount)));
-            messages.set(i, messages.get(i).replace("{3}", (sender.equals(new UUID(0, 0)) ? "CONSOLE" : (SimpleUUIDFetcher.fromUniqueId(sender) == null ? "N/A" : Objects.requireNonNull(SimpleUUIDFetcher.fromUniqueId(sender)))))); //TODO: UUIDFetcher
-        }
+        messages.replaceAll(s -> s
+                .replace("{1}", lootbox.getDisplayName().toString())
+                .replace("{2}", String.valueOf(amount))
+                .replace("{3}", sender.equals(new UUID(0, 0)) ? "CONSOLE" : "N/A"));
         messages.stream().map(MiniMessage.miniMessage()::deserialize).forEach(Bukkit::broadcast);
 
         Sound sound = plugin.generalConfiguration().lootboxAllSound().sound();
