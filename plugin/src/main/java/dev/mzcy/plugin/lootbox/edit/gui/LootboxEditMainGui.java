@@ -48,8 +48,8 @@ public class LootboxEditMainGui {
                 .addIngredient('#', borderItem)
                 .addIngredient('C', new CloseItem())
                 .addIngredient('A', createItem(Material.NAME_TAG, "§7Edit display name", event -> {
-                    createDisplayNameConversation(event.getPlayer()).begin();
                     event.getPlayer().closeInventory();
+                    createDisplayNameConversation(event.getPlayer()).begin();
                 }, "§7Click to edit the display name of the lootbox.", "§8• §7Current display name: §r" + lootbox.getDisplayName()))
                 .addIngredient('B', createItem(Material.CHEST, "§7Edit items", click -> {
                     //new LootboxEditItemsGui(plugin, lootbox).open(click.getPlayer()); // TODO
@@ -61,9 +61,8 @@ public class LootboxEditMainGui {
                     //new LootboxEditCooldownGui(plugin, lootbox).open(click.getPlayer()); // TODO
                 }, "§7Click to edit the cooldown of the lootbox.", "§8• §7Current cooldown: §eTODO"))
                 .addIngredient('F', createItem(Material.STRUCTURE_VOID, "§cDelete lootbox", click -> {
-                    plugin.databaseManager().lootboxManager().delete(lootbox);
-                    click.getPlayer().sendMessage("§cSuccessfully deleted the lootbox.");
                     click.getPlayer().closeInventory();
+                    createDeletionConversation(click.getPlayer()).begin();
                 }, "§7Click to delete the lootbox.", "§8• §cThis action cannot be undone!"))
                 .addIngredient('I', ItemProvider.EMPTY)
                 .build();
@@ -75,6 +74,38 @@ public class LootboxEditMainGui {
 
     private SimpleItem createItem(Material material, String displayName, Consumer<Click> clickConsumer, String... lore) {
         return new SimpleItem(SimpleItemStack.builder(material).withDisplayName(displayName).withLore(Arrays.stream(lore).map(Component::text).toArray(Component[]::new)).build(), clickConsumer);
+    }
+
+    private Conversation createDeletionConversation(Player player) {
+        ConversationFactory factory = new ConversationFactory(plugin)
+                .withFirstPrompt(new StringPrompt() {
+                    @Override
+                    public @NotNull String getPromptText(@NotNull ConversationContext conversationContext) {
+                        return "Are you sure you want to delete the lootbox? §cThis action cannot be undone. §eType §aconfirm §eto confirm or §ccancel §eto cancel.";
+                    }
+
+                    @Override
+                    public @Nullable Prompt acceptInput(@NotNull ConversationContext conversationContext, @Nullable String s) {
+                        if (s == null) return this;
+                        if (s.equalsIgnoreCase("confirm")) {
+                            plugin.databaseManager().lootboxManager().delete(lootbox);
+                            player.sendMessage("§cSuccessfully deleted the lootbox.");
+                            player.closeInventory();
+                            return END_OF_CONVERSATION;
+                        } else if (s.equalsIgnoreCase("cancel")) {
+                            player.sendMessage("§aCancelled deletion of the lootbox.");
+                            new LootboxEditMainGui(plugin, lootbox).open(player);
+                            return END_OF_CONVERSATION;
+                        } else {
+                            player.sendMessage("§cInvalid input. Please type §aconfirm §cor §ccancel.");
+                            return this;
+                        }
+                    }
+                })
+                .withLocalEcho(false)
+                .withEscapeSequence("/cancel")
+                .withTimeout(60);
+        return factory.buildConversation(player);
     }
 
     private Conversation createDisplayNameConversation(Player player) {
