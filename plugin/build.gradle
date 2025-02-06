@@ -24,7 +24,7 @@ dependencies {
     implementation 'xyz.xenondevs.invui:inventory-access-r18:1.43'
 
     compileOnly "io.papermc.paper:paper-api:${paperVersion}"
-    compileOnly "de.oliver:FancyHolograms:2.4.1"
+    compileOnly "de.oliver:FancyHolograms:2.4.2"
 
     implementation project(":api")
 }
