@@ -27,6 +27,8 @@ import java.util.UUID;
 
 public class LootboxCommand extends SimpleCommand {
 
+    private static final UUID CONSOLE_SENDER_UNIQUE_ID = new UUID(0, 0);
+
     public LootboxCommand(LootboxesPlugin plugin) {
         super("lootbox", List.of("lb", "slb", "simplelb", "simplelootbox", "simplelootboxes", "lootboxes"), plugin);
     }
@@ -146,7 +148,7 @@ public class LootboxCommand extends SimpleCommand {
             target.getInventory().addItem(item);
             target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? sender.getName() : "CONSOLE"));
         }
-        sendLootboxAllMessage(lootboxOpt.get(), amount, new UUID(0, 0));
+        sendLootboxAllMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? ((Player) sender).getUniqueId() : CONSOLE_SENDER_UNIQUE_ID);
         sender.sendMessage("Gave lootbox to all players.");
     }
 
@@ -166,7 +168,7 @@ public class LootboxCommand extends SimpleCommand {
 
         SimpleItemStack item = createLootboxItem(lootboxOpt.get(), amount);
         target.getInventory().addItem(item);
-        target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, "CONSOLE"));
+        target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? sender.getName() : "CONSOLE"));
         sender.sendMessage("Gave lootbox to player.");
     }
 
@@ -201,7 +203,7 @@ public class LootboxCommand extends SimpleCommand {
         messages.replaceAll(s -> s
                 .replace("{1}", lootbox.getDisplayName().toString())
                 .replace("{2}", String.valueOf(amount))
-                .replace("{3}", sender.equals(new UUID(0, 0)) ? "CONSOLE" : "N/A"));
+                .replace("{3}", sender.equals(CONSOLE_SENDER_UNIQUE_ID) ? "CONSOLE" : "N/A"));
         messages.stream().map(MiniMessage.miniMessage()::deserialize).forEach(Bukkit::broadcast);
 
         Sound sound = plugin.generalConfiguration().lootboxAllSound().sound();
