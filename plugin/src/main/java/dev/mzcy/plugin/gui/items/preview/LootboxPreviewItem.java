@@ -44,6 +44,5 @@ public class LootboxPreviewItem extends AbstractItem {
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent inventoryClickEvent) {
         inventoryClickEvent.setCancelled(true);
-        //TODO: Implement lootbox item preview
     }
 }
