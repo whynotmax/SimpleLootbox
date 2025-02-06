@@ -12,6 +12,7 @@ import dev.mzcy.plugin.lootbox.livedrop.ILiveDropManager;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import xyz.xenondevs.invui.InvUI;
 
 @Getter
@@ -26,6 +27,7 @@ public class LootboxesPlugin extends LootboxesAPI {
     IDatabaseManager databaseManager;
     ILiveDropManager liveDropManager;
     CommandManager commandManager;
+    boolean fancyHologramsEnabled;
 
     @Override
     public void onEnable() {
@@ -37,11 +39,21 @@ public class LootboxesPlugin extends LootboxesAPI {
         liveDropManager = new ILiveDropManager();
         commandManager = new CommandManager(this);
 
+        fancyHologramsEnabled = Bukkit.getPluginManager().isPluginEnabled("FancyHolograms");
+        if (!fancyHologramsEnabled) {
+            getLogger().warning("FancyHolograms is not enabled! This means that we can't spawn any holograms at this time (maybe in the next update) as I don't want to code my own hologram implementation at this moment. Sorry!");
+        }
+
         InvUI.getInstance().setPlugin(this);
     }
 
     @Override
     public void onDisable() {
 
+    }
+
+    @Override
+    public boolean fancyHologramsEnabled() {
+        return fancyHologramsEnabled;
     }
 }

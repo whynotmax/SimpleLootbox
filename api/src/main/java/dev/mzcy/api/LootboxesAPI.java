@@ -35,6 +35,14 @@ public abstract class LootboxesAPI extends JavaPlugin {
     }
 
     /**
+     * Gets whether FancyHolograms is enabled.
+     * Important for Lootbox Preview and other hologram features.
+     *
+     * @return whether fancy holograms are enabled
+     */
+    public abstract boolean fancyHologramsEnabled();
+
+    /**
      * Gets the database configuration.
      *
      * @return the database configuration
