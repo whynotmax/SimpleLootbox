@@ -9,11 +9,13 @@ import dev.mzcy.api.utility.SimpleItemStack;
 import dev.mzcy.api.utility.Utility;
 import dev.mzcy.plugin.LootboxesPlugin;
 import dev.mzcy.plugin.command.model.SimpleCommand;
+import dev.mzcy.plugin.lootbox.edit.gui.LootboxEditMainGui;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +47,13 @@ public class LootboxCommand extends SimpleCommand {
 
     private void handlePlayerCommand(Player player, String[] arguments) {
         if (arguments.length == 0) {
-            player.sendMessage("Usage: /lootbox <give> <lootbox> <amount>");
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.not-found", plugin.messagesConfiguration().getPrefix()));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <create> <lootbox> <material>"));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <delete> <lootbox>"));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <list>"));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <give> <player/all> <lootbox> <amount>"));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <edit> <lootbox>"));
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <preview> <lootbox>"));
             return;
         }
         switch (arguments[0]) {
@@ -54,8 +63,27 @@ public class LootboxCommand extends SimpleCommand {
             case "preview":
                 handlePreviewCommand(player, arguments);
                 break;
+            case "create":
+                handleCreateCommand(player, arguments);
+                break;
+            case "delete":
+                handleDeleteCommand(player, arguments);
+                break;
+            case "edit":
+                handleEditCommand(player, arguments);
+                break;
+            case "list":
+                //TODO: Implement list command
+                break;
             default:
-                player.sendMessage("Usage: /lootbox <give> <player/all> <lootbox> <amount>");
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.not-found", plugin.messagesConfiguration().getPrefix()));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <create> <lootbox> <material>"));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <delete> <lootbox>"));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <list>"));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <give> <player/all> <lootbox> <amount>"));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <edit> <lootbox>"));
+                player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox <preview> <lootbox>"));
+                break;
         }
     }
 
@@ -108,6 +136,53 @@ public class LootboxCommand extends SimpleCommand {
         }
     }
 
+    private void handleCreateCommand(Player player, String[] arguments) {
+        if (arguments.length < 3) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox create <lootbox> <material>"));
+            return;
+        }
+        String lootboxName = arguments[1];
+        String materialName = arguments[2];
+        if (plugin.databaseManager().lootboxManager().exists(lootboxName)) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.exists", plugin.messagesConfiguration().getPrefix(), lootboxName));
+            return;
+        }
+        Lootbox lootbox = new Lootbox();
+        lootbox.setName(lootboxName);
+        lootbox.setMaterial(Material.valueOf(materialName));
+        lootbox.setItems(new ArrayList<>());
+        lootbox.setDisplayName(Component.text(lootboxName));
+        plugin.databaseManager().lootboxManager().save(lootbox);
+        player.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.create", plugin.messagesConfiguration().getPrefix(), lootboxName));
+    }
+
+    private void handleDeleteCommand(Player player, String[] arguments) {
+        if (arguments.length < 2) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox delete <lootbox>"));
+            return;
+        }
+        String lootboxName = arguments[1];
+        if (!plugin.databaseManager().lootboxManager().exists(lootboxName)) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.not-found", plugin.messagesConfiguration().getPrefix()));
+            return;
+        }
+        plugin.databaseManager().lootboxManager().delete(lootboxName);
+        player.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.delete", plugin.messagesConfiguration().getPrefix()));
+    }
+
+    private void handleEditCommand(Player player, String[] arguments) {
+        if (arguments.length < 2) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.command.usage", plugin.messagesConfiguration().getPrefix(), "/lootbox edit <lootbox>"));
+            return;
+        }
+        String lootboxName = arguments[1];
+        if (!plugin.databaseManager().lootboxManager().exists(lootboxName)) {
+            player.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.not-found", plugin.messagesConfiguration().getPrefix()));
+            return;
+        }
+        new LootboxEditMainGui(plugin, plugin.databaseManager().lootboxManager().get(lootboxName).get()).open(player);
+    }
+
     private void createHologram(Player player, Lootbox lootbox, String hologramId) {
         BlockHologramData blockData = new BlockHologramData(hologramId, player.getLocation());
         blockData.setBlock(lootbox.getMaterial());
@@ -116,11 +191,9 @@ public class LootboxCommand extends SimpleCommand {
         FancyHologramsPlugin.get().getHologramManager().addHologram(blockHologram);
 
         TextHologramData textData = new TextHologramData(hologramId + "-text", player.getLocation().add(0, 2.3, 0));
-        textData.setText(List.of(
-                MiniMessage.miniMessage().serialize(lootbox.getDisplayName()),
-                "§8§m                  §r",
-                "§7§oPreview §8• §7§oRightclick to open"
-        ));
+        List<String> lines = plugin.messagesConfiguration().getPreviewHologram();
+        lines.replaceAll(s -> s.replace("{displayName}", MiniMessage.miniMessage().serialize(lootbox.getDisplayName())));
+        textData.setText(lines);
         textData.setTextAlignment(TextDisplay.TextAlignment.CENTER);
         textData.setTextUpdateInterval(20);
         textData.setScale(new Vector3f(1.5f, 1.5f, 1.5f));
@@ -137,7 +210,7 @@ public class LootboxCommand extends SimpleCommand {
     private void giveLootboxToAll(CommandSender sender, String lootboxName, String amountStr) {
         Optional<Lootbox> lootboxOpt = plugin.databaseManager().lootboxManager().get(lootboxName);
         if (lootboxOpt.isEmpty()) {
-            sender.sendMessage("Lootbox not found.");
+            sender.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.not-found", plugin.messagesConfiguration().getPrefix(), lootboxName));
             return;
         }
         int amount = parseAmount(sender, amountStr);
@@ -149,18 +222,18 @@ public class LootboxCommand extends SimpleCommand {
             target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? sender.getName() : "CONSOLE"));
         }
         sendLootboxAllMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? ((Player) sender).getUniqueId() : CONSOLE_SENDER_UNIQUE_ID);
-        sender.sendMessage("Gave lootbox to all players.");
+        sender.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.give-sender", plugin.messagesConfiguration().getPrefix(), lootboxOpt.get().getDisplayName(), amount, "all online players"));
     }
 
     private void giveLootboxToPlayer(CommandSender sender, String playerName, String lootboxName, String amountStr) {
         Player target = sender.getServer().getPlayerExact(playerName);
         if (target == null) {
-            sender.sendMessage("Player not found.");
+            sender.sendMessage(plugin.messagesConfiguration().get("messages.command.player-not-found", plugin.messagesConfiguration().getPrefix()));
             return;
         }
         Optional<Lootbox> lootboxOpt = plugin.databaseManager().lootboxManager().get(lootboxName);
         if (lootboxOpt.isEmpty()) {
-            sender.sendMessage("Lootbox not found.");
+            sender.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.not-found", plugin.messagesConfiguration().getPrefix(), lootboxName));
             return;
         }
         int amount = parseAmount(sender, amountStr);
@@ -169,7 +242,7 @@ public class LootboxCommand extends SimpleCommand {
         SimpleItemStack item = createLootboxItem(lootboxOpt.get(), amount);
         target.getInventory().addItem(item);
         target.sendMessage(createLootboxMessage(lootboxOpt.get(), amount, (sender instanceof Player) ? sender.getName() : "CONSOLE"));
-        sender.sendMessage("Gave lootbox to player.");
+        sender.sendMessage(plugin.messagesConfiguration().get("messages.lootbox.give-sender", plugin.messagesConfiguration().getPrefix(), lootboxOpt.get().getDisplayName(), amount, target.getName()));
     }
 
     private int parseAmount(CommandSender sender, String amountStr) {
@@ -178,9 +251,9 @@ public class LootboxCommand extends SimpleCommand {
             if (Utility.inRange(amount, 1, 64)) {
                 return amount;
             }
-            sender.sendMessage("Amount must be between 1 and 64.");
+            sender.sendMessage(plugin.messagesConfiguration().get("messages.command.invalid-amount", plugin.messagesConfiguration().getPrefix(), 1, 64));
         } catch (NumberFormatException e) {
-            sender.sendMessage("Invalid amount.");
+            sender.sendMessage(plugin.messagesConfiguration().get("messages.command.invalid-amount", plugin.messagesConfiguration().getPrefix(), 1, 64));
         }
         return -1;
     }

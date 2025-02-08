@@ -7,3 +7,6 @@ description: SimpleLootbox is a plugin that allows you to create custom lootboxe
   want and customize them to your liking. You can also create custom rewards for each lootbox, so you can give your
   players the chance to win some awesome prizes!
 api-version: 1.20
+softdepend:
+  - Vault
+  - FancyHolograms

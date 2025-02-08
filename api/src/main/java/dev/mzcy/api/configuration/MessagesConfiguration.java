@@ -46,4 +46,11 @@ public interface MessagesConfiguration {
      */
     List<String> getLootboxAllBroadcast();
 
+    /**
+     * Gets the list of strings for the preview hologram.
+     *
+     * @return the list of strings for the preview hologram
+     */
+    List<String> getPreviewHologram();
+
 }

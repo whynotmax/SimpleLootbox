@@ -1,8 +1,10 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 import java.text.SimpleDateFormat
 
 plugins {
     id 'application'
-    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
+    id 'com.gradleup.shadow' version "${shadowVersion}"
     id 'net.kyori.blossom' version "${blossomVersion}"
 }
 
