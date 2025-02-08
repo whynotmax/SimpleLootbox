@@ -37,6 +37,8 @@ public class IMessagesConfiguration extends Configuration implements MessagesCon
             put("messages.lootbox.not-found", "{0}<red>A lootbox with the name <gold>{1}<red> couldn't be found.");
             put("messages.lootbox.create", "{0}<gray>You have created a lootbox with the name <gold>{1}<gray>.");
             put("messages.lootbox.delete", "{0}<gray>You have deleted the lootbox with the name <gold>{1}<gray>.");
+            put("messages.lootbox.preview.create", "{0}<gray>You have created a preview for the lootbox with the name <gold>{1}<gray>.");
+            put("messages.lootbox.preview.delete", "{0}<gray>You have deleted the preview for the lootbox with the name <gold>{1}<gray>.");
 
 
         }};
